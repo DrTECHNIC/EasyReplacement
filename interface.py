@@ -216,3 +216,25 @@ class CipherApp:
                 entry.config(state=tk.DISABLED)
                 if letter not in self.substitutions:
                     entry.delete(0, tk.END)
+
+    def update_substitution(self, encrypted, decrypted):
+        """
+        Обновляет подстановку для зашифрованного символа.
+
+        Args:
+            encrypted (str): Зашифрованный символ
+            decrypted (str): Дешифрованный символ
+        """
+        self.substitutions[encrypted] = decrypted
+        self.update_display()
+
+    def remove_substitution(self, encrypted):
+        """
+        Удаляет подстановку для зашифрованного символа.
+
+        Args:
+            encrypted (str): Зашифрованный символ, для которого удаляется подстановка
+        """
+        if encrypted in self.substitutions:
+            del self.substitutions[encrypted]
+            self.update_display()

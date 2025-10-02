@@ -111,3 +111,48 @@ class CipherApp:
         substitution_frame = ttk.LabelFrame(main_frame, text="Таблица замен:", padding="5")
         substitution_frame.grid(row=2, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=5)
         substitution_frame.grid_columnconfigure(0, weight=1)
+        self.create_substitution_table(substitution_frame)
+
+    def create_substitution_table(self, parent):
+        """
+        Создает таблицу замен символов с возможностью ввода дешифрованных значений.
+
+        Args:
+            parent (ttk.Frame): Родительский фрейм для таблицы замен
+        """
+        canvas = tk.Canvas(parent, height=150)
+        scrollbar = ttk.Scrollbar(parent, orient="vertical", command=canvas.yview)
+        scrollable_frame = ttk.Frame(canvas)
+        scrollable_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        self.substitution_entries = {}
+        letters = self.cipher.RUSSIAN_LETTERS
+
+        # Создаем 5 колонок
+        for col in range(5):
+            col_frame = ttk.Frame(scrollable_frame)
+            col_frame.grid(row=0, column=col, padx=10, sticky=tk.N)
+            for row in range(6):
+                idx = col * 6 + row
+                if idx < len(letters):
+                    letter = letters[idx]
+                    self.create_substitution_row(col_frame, row, letter)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+    def create_substitution_row(self, parent, row, encrypted_letter):
+        """
+        Создает строку в таблице замен для одного символа.
+
+        Args:
+            parent (ttk.Frame): Родительский фрейм для строки
+            row (int): Номер строки в таблице
+            encrypted_letter (str): Зашифрованный символ для этой строки
+        """
+        frame = ttk.Frame(parent)
+        frame.grid(row=row, column=0, sticky=tk.W, pady=2)
+        ttk.Label(frame, text=f"{encrypted_letter} =", width=4, font=("Arial", 9)).pack(side=tk.LEFT)
+        entry = ttk.Entry(frame, width=3, font=("Courier", 9))
+        entry.pack(side=tk.LEFT)
+        self.substitution_entries[encrypted_letter] = entry

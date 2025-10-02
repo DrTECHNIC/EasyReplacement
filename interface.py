@@ -48,6 +48,7 @@ class CipherApp:
         self.cipher = RussianSubstitutionCipher()
         self.substitutions = {}
         self.create_widgets()
+        self.setup_bindings()
 
     def set_icon(self):
         """Устанавливает иконку приложения из PNG файла."""
@@ -155,4 +156,31 @@ class CipherApp:
         ttk.Label(frame, text=f"{encrypted_letter} =", width=4, font=("Arial", 9)).pack(side=tk.LEFT)
         entry = ttk.Entry(frame, width=3, font=("Courier", 9))
         entry.pack(side=tk.LEFT)
+        vcmd = (parent.register(self.validate_substitution_input), '%P', encrypted_letter)
+        entry.configure(validate="key", validatecommand=vcmd)
         self.substitution_entries[encrypted_letter] = entry
+
+    def setup_bindings(self):
+        """Настраивает обработчики событий для элементов интерфейса."""
+        self.text_input.bind('<KeyRelease>', self.on_text_change)
+
+    def validate_substitution_input(self, new_value, encrypted_letter):
+        """
+        Валидирует ввод в поле подстановки символов.
+
+        Args:
+            new_value (str): Новое значение, введенное пользователем
+            encrypted_letter (str): Зашифрованный символ, для которого делается подстановка
+
+        Returns:
+            bool: True если ввод корректен, False если нет
+        """
+        if len(new_value) > 1:
+            return False
+        if new_value == "":
+            self.remove_substitution(encrypted_letter)
+            return True
+        if new_value.upper() in self.cipher.RUSSIAN_LETTERS:
+            self.update_substitution(encrypted_letter, new_value.upper())
+            return True
+        return False

@@ -184,3 +184,35 @@ class CipherApp:
             self.update_substitution(encrypted_letter, new_value.upper())
             return True
         return False
+
+    def on_text_change(self, event=None):
+        """
+        Обрабатывает изменение текста в поле ввода.
+
+        Args:
+            event: Событие изменения текста (необязательный)
+        """
+        encrypted_text = self.text_input.get("1.0", tk.END).strip()
+        self.cipher.set_encrypted_text(encrypted_text)
+        self.update_display()
+
+    def update_display(self):
+        """Обновляет отображение дешифрованного текста на основе текущих подстановок."""
+        self.text_output.config(state=tk.NORMAL)
+        self.text_output.delete("1.0", tk.END)
+        if self.cipher.encrypted_text:
+            decrypted_display = self.cipher.get_decrypted_display(self.substitutions)
+            self.text_output.insert("1.0", decrypted_display)
+        self.text_output.config(state=tk.DISABLED)
+        self.update_substitution_entries_state()
+
+    def update_substitution_entries_state(self):
+        """Обновляет состояние полей ввода в таблице замен в зависимости от наличия символов в тексте."""
+        encrypted_letters_in_text = self.cipher.get_encrypted_letters()
+        for letter, entry in self.substitution_entries.items():
+            if letter in encrypted_letters_in_text:
+                entry.config(state=tk.NORMAL)
+            else:
+                entry.config(state=tk.DISABLED)
+                if letter not in self.substitutions:
+                    entry.delete(0, tk.END)

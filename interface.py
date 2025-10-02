@@ -47,6 +47,7 @@ class CipherApp:
         self.set_icon()
         self.cipher = RussianSubstitutionCipher()
         self.substitutions = {}
+        self.create_widgets()
 
     def set_icon(self):
         """Устанавливает иконку приложения из PNG файла."""
@@ -76,3 +77,37 @@ class CipherApp:
                     print(f"  {full_path} - {'существует' if os.path.exists(full_path) else 'не существует'}")
         except Exception as e:
             print(f"Ошибка при установке иконки: {e}")
+
+    def create_widgets(self):
+        """Создает и размещает все элементы пользовательского интерфейса."""
+        # Основной фрейм
+        main_frame = ttk.Frame(self.root, padding="10")
+        main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+        # Настройка весов строк и столбцов для растягивания
+        self.root.grid_rowconfigure(0, weight=1)
+        self.root.grid_columnconfigure(0, weight=1)
+        main_frame.grid_rowconfigure(0, weight=0)  # Поле ввода
+        main_frame.grid_rowconfigure(1, weight=3)  # Область дешифровки
+        main_frame.grid_rowconfigure(2, weight=1)  # Таблица замен
+        main_frame.grid_columnconfigure(0, weight=1)
+
+        # Поле ввода зашифрованного текста
+        input_frame = ttk.LabelFrame(main_frame, text="Зашифрованный текст:", padding="5")
+        input_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=5)
+        input_frame.grid_columnconfigure(0, weight=1)
+        self.text_input = tk.Text(input_frame, height=6, width=90, wrap=tk.WORD)
+        self.text_input.pack(fill=tk.BOTH, expand=True)
+
+        # Область отображения дешифрованного текста
+        output_frame = ttk.LabelFrame(main_frame, text="Текст для дешифровки:", padding="5")
+        output_frame.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=5)
+        output_frame.grid_columnconfigure(0, weight=1)
+        self.text_output = tk.Text(output_frame, height=20, width=90, wrap=tk.WORD,
+                                   font=("Courier", 10), state=tk.DISABLED)
+        self.text_output.pack(fill=tk.BOTH, expand=True)
+
+        # Таблица замен
+        substitution_frame = ttk.LabelFrame(main_frame, text="Таблица замен:", padding="5")
+        substitution_frame.grid(row=2, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=5)
+        substitution_frame.grid_columnconfigure(0, weight=1)

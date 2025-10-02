@@ -89,3 +89,35 @@ class RussianSubstitutionCipher:
             if char in self.RUSSIAN_LETTERS:
                 letters.add(char)
         return sorted(list(letters))
+
+    def get_decrypted_display(self, substitutions):
+        """
+        Формирует отформатированное отображение дешифрованного текста.
+
+        Args:
+            substitutions (dict): Словарь подстановок символов
+
+        Returns:
+            str: Отформатированный текст с дешифрованными и оригинальными символами
+        """
+        lines = self.get_text_lines()
+        if not lines:
+            return "Введите зашифрованный текст для отображения"
+        result = []
+        for line in lines:
+            groups = self.get_char_groups(line)
+
+            # Строка с расшифрованными символами
+            decrypted_line = []
+            for group in groups:
+                decrypted_group = ''.join([self.get_decrypted_char(char, substitutions) for char in group])
+                decrypted_line.append(decrypted_group)
+            result.append(' '.join(decrypted_line))
+
+            # Строка с оригинальными символами
+            original_line = []
+            for group in groups:
+                original_group = ''.join([self.get_original_char(char, substitutions) for char in group])
+                original_line.append(original_group)
+            result.append(' '.join(original_line))
+        return '\n'.join(result)

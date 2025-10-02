@@ -140,7 +140,6 @@ class CipherApp:
                     letter = letters[idx]
                     self.create_substitution_row(col_frame, row, letter)
         canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
 
     def create_substitution_row(self, parent, row, encrypted_letter):
         """
@@ -156,13 +155,10 @@ class CipherApp:
         ttk.Label(frame, text=f"{encrypted_letter} =", width=4, font=("Arial", 9)).pack(side=tk.LEFT)
         entry = ttk.Entry(frame, width=3, font=("Courier", 9))
         entry.pack(side=tk.LEFT)
+        # Валидация ввода - только русские буквы
         vcmd = (parent.register(self.validate_substitution_input), '%P', encrypted_letter)
         entry.configure(validate="key", validatecommand=vcmd)
         self.substitution_entries[encrypted_letter] = entry
-
-    def setup_bindings(self):
-        """Настраивает обработчики событий для элементов интерфейса."""
-        self.text_input.bind('<KeyRelease>', self.on_text_change)
 
     def validate_substitution_input(self, new_value, encrypted_letter):
         """
@@ -184,6 +180,10 @@ class CipherApp:
             self.update_substitution(encrypted_letter, new_value.upper())
             return True
         return False
+
+    def setup_bindings(self):
+        """Настраивает обработчики событий для элементов интерфейса."""
+        self.text_input.bind('<KeyRelease>', self.on_text_change)
 
     def on_text_change(self, event=None):
         """

@@ -40,12 +40,16 @@ def copy_public_folder():
 def build_executable():
     """Собирает проект в исполняемый файл."""
     system = platform.system()
+
+    # Определяем имя файла в зависимости от ОС
     if system == "Windows":
         output_name = "cipher_tool.exe"
         separator = ";"
     else:
         output_name = "cipher_tool"
         separator = ":"
+
+    # Создаем команду для PyInstaller
     cmd = [
         "pyinstaller",
         "--onefile",

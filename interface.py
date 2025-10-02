@@ -44,5 +44,35 @@ class CipherApp:
         self.root.title("Дешифровка текста методом простой замены")
         self.root.geometry("750x700")
         self.root.resizable(False, False)
+        self.set_icon()
         self.cipher = RussianSubstitutionCipher()
         self.substitutions = {}
+
+    def set_icon(self):
+        """Устанавливает иконку приложения из PNG файла."""
+        try:
+            possible_paths = [
+                "./public/icon.png",
+                "public/icon.png",
+                "icon.png",
+                os.path.join(os.path.dirname(__file__), "public", "icon.png"),
+                os.path.join(os.path.dirname(__file__), "icon.png"),
+            ]
+            icon_path = None
+            for path in possible_paths:
+                full_path = resource_path(path)
+                if os.path.exists(full_path):
+                    icon_path = full_path
+                    break
+            if icon_path:
+                icon = tk.PhotoImage(file=icon_path)
+                self.root.iconphoto(False, icon)
+                self.app_icon = icon
+                print(f"Иконка установлена: {icon_path}")
+            else:
+                print("Иконка не найдена ни по одному из путей:")
+                for path in possible_paths:
+                    full_path = resource_path(path)
+                    print(f"  {full_path} - {'существует' if os.path.exists(full_path) else 'не существует'}")
+        except Exception as e:
+            print(f"Ошибка при установке иконки: {e}")

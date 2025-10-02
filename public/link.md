@@ -1,0 +1,1 @@
+Шифр иконки от Ylivdesign - [Flaticon](https://www.flaticon.com/ru/free-icons/)

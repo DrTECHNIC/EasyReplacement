@@ -46,3 +46,46 @@ class RussianSubstitutionCipher:
         for i in range(0, len(line), 5):
             groups.append(line[i:i + 5])
         return groups
+
+    def get_decrypted_char(self, char, substitutions):
+        """
+        Возвращает расшифрованный символ или подчеркивание, если замена не определена.
+
+        Args:
+            char (str): Символ для дешифровки
+            substitutions (dict): Словарь подстановок символов
+
+        Returns:
+            str: Расшифрованный символ или '_', если замена не определена
+        """
+        if char == ' ':
+            return ' '
+        return substitutions.get(char.upper(), '_')
+
+    def get_original_char(self, char, substitutions):
+        """
+        Возвращает оригинальный символ или пробел для уже расшифрованных символов.
+
+        Args:
+            char (str): Символ для проверки
+            substitutions (dict): Словарь подстановок символов
+
+        Returns:
+            str: Оригинальный символ или пробел, если символ уже расшифрован
+        """
+        if char == ' ':
+            return ' '
+        return ' ' if char.upper() in substitutions else char
+
+    def get_encrypted_letters(self):
+        """
+        Извлекает уникальные зашифрованные буквы из текста.
+
+        Returns:
+            list: Отсортированный список уникальных букв, присутствующих в тексте
+        """
+        letters = set()
+        for char in self.encrypted_text:
+            if char in self.RUSSIAN_LETTERS:
+                letters.add(char)
+        return sorted(list(letters))
